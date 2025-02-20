@@ -8,6 +8,7 @@ import com.hhamzic1.scoreboards.internal.ScoreboardFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -89,6 +90,32 @@ public class LiveFootballWorldCupScoreboardTest {
         assertEquals(5, matchesNotStarted.get());
 
         executor.shutdown();
+    }
+
+    @Test
+    public void givenAlreadyStartedMatch_whenFinishMatchCalled_thenFinishMatchSuccessfully() {
+        var italy = new Team("Italy");
+        var england = new Team("England");
+        var match = scoreboard.startMatch(italy, england);
+
+        scoreboard.finishMatch(match.id());
+
+        var finishedMatch = scoreboard.getAllFinishedMatches().getFirst();
+
+        assertEquals(match.id(), finishedMatch.id());
+        assertNotNull(finishedMatch.endTime());
+    }
+
+    @Test
+    public void givenAlreadyFinishedMatch_whenFinishMatchCalled_thenThrow() {
+        var italy = new Team("Germany");
+        var england = new Team("Argentina");
+        var match = scoreboard.startMatch(italy, england);
+
+        scoreboard.finishMatch(match.id());
+
+        assertThrows(MatchStoreException.class, () -> scoreboard.finishMatch(match.id()));
+        assertThrows(MatchStoreException.class, () -> scoreboard.finishMatch(UUID.randomUUID()));
     }
 
     private static Runnable createMatchTask(Scoreboard scoreboard, Team team1, Team team2,
