@@ -88,6 +88,7 @@ class InMemoryMatchDataStoreHashMapImpl implements InMemoryMatchDataStore {
     @Override
     public void clear() {
         activeMatchesStore.clear();
+        finishedMatchesStore.clear();
     }
 
     private boolean isAnyTeamInAnotherActiveMatch(Team homeTeam, Team awayTeam) {
