@@ -153,6 +153,41 @@ public class LiveFootballWorldCupScoreboardTest {
         assertThrows(MatchStoreException.class, () -> scoreboard.updateScore(match.id(), new Score(1, 1)));
     }
 
+    @Test
+    public void givenActiveMatches_whenGetActiveMatchesSummaryCalled_thenReturnSortedActiveMatches() {
+        var mexico = new Team("Mexico");
+        var canada = new Team("Canada");
+        var spain = new Team("Spain");
+        var brazil = new Team("Brazil");
+        var germany = new Team("Germany");
+        var france = new Team("France");
+        var uruguay = new Team("Uruguay");
+        var italy = new Team("Italy");
+        var argentina = new Team("Argentina");
+        var australia = new Team("Australia");
+
+        var match1 = scoreboard.startMatch(mexico, canada);
+        var match2 = scoreboard.startMatch(spain, brazil);
+        var match3 = scoreboard.startMatch(germany, france);
+        var match4 = scoreboard.startMatch(uruguay, italy);
+        var match5 = scoreboard.startMatch(argentina, australia);
+
+        scoreboard.updateScore(match1.id(), new Score(0, 5));
+        scoreboard.updateScore(match2.id(), new Score(10, 2));
+        scoreboard.updateScore(match3.id(), new Score(2, 2));
+        scoreboard.updateScore(match4.id(), new Score(6, 6));
+        scoreboard.updateScore(match5.id(), new Score(3, 1));
+
+        var activeMatchesSummary = scoreboard.getActiveMatchesSummary();
+
+        assertEquals(5, activeMatchesSummary.size());
+        assertEquals(match4.id(), activeMatchesSummary.get(0).id());
+        assertEquals(match2.id(), activeMatchesSummary.get(1).id());
+        assertEquals(match1.id(), activeMatchesSummary.get(2).id());
+        assertEquals(match5.id(), activeMatchesSummary.get(3).id());
+        assertEquals(match3.id(), activeMatchesSummary.get(4).id());
+    }
+
     private static Runnable createMatchTask(Scoreboard scoreboard, Team team1, Team team2,
                                             AtomicInteger matchesStarted, AtomicInteger matchesNotStarted, CountDownLatch latch) {
         return () -> {
