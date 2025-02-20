@@ -1,7 +1,14 @@
 package com.hhamzic1.scoreboards;
 
+import com.hhamzic1.scoreboards.common.SportType;
+import com.hhamzic1.scoreboards.common.exception.ScoreboardException;
+import com.hhamzic1.scoreboards.common.model.Team;
+import com.hhamzic1.scoreboards.internal.ScoreboardFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LiveFootballWorldCupScoreboardTest {
 
