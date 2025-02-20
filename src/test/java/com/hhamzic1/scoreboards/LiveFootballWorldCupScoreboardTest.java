@@ -13,8 +13,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LiveFootballWorldCupScoreboardTest {
 
@@ -116,6 +115,7 @@ public class LiveFootballWorldCupScoreboardTest {
 
         assertThrows(MatchStoreException.class, () -> scoreboard.finishMatch(match.id()));
         assertThrows(MatchStoreException.class, () -> scoreboard.finishMatch(UUID.randomUUID()));
+        assertThrows(ScoreboardException.class, () -> scoreboard.finishMatch(null));
     }
 
     private static Runnable createMatchTask(Scoreboard scoreboard, Team team1, Team team2,

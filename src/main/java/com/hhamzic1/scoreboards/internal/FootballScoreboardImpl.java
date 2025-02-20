@@ -6,6 +6,9 @@ import com.hhamzic1.scoreboards.common.model.Score;
 import com.hhamzic1.scoreboards.common.model.Team;
 import com.hhamzic1.scoreboards.common.store.MatchDataStore;
 
+import java.util.List;
+import java.util.UUID;
+
 class FootballScoreboardImpl implements Scoreboard {
 
     private final MatchDataStore matchDataStore;
@@ -26,5 +29,17 @@ class FootballScoreboardImpl implements Scoreboard {
         matchDataStore.save(match.id(), match);
 
         return match;
+    }
+
+    @Override
+    public void finishMatch(UUID matchId) {
+        validator.validateOnFinishMatch(matchId);
+
+        matchDataStore.delete(matchId);
+    }
+
+    @Override
+    public List<Match> getAllFinishedMatches() {
+        return matchDataStore.getAllFinished();
     }
 }

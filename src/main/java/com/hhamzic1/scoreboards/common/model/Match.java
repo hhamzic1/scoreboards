@@ -10,6 +10,10 @@ public record Match(UUID id, OffsetDateTime startTime, OffsetDateTime endTime,
         this(UUID.randomUUID(), OffsetDateTime.now(), null, homeTeam, awayTeam, score);
     }
 
+    public Match(Match match, OffsetDateTime endTime) {
+        this(match.id(), match.startTime(), endTime, match.homeTeam(), match.awayTeam(), match.score());
+    }
+
     @Override
     public String toString() {
         return "%s %d - %s %d".formatted(homeTeam.name(), score.homeTeamScore(), awayTeam.name(), score.awayTeamScore());
