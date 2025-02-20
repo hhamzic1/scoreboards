@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.UnaryOperator;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -20,13 +21,13 @@ class InMemoryMatchDataStoreHashMapImpl implements InMemoryMatchDataStore {
     private final Map<UUID, Match> finishedMatchesStore = new ConcurrentHashMap<>();
 
     @Override
-    public void save(UUID matchId, Match match) {
+    public Match save(UUID matchId, Match match) {
         synchronized (this) {
             if (isAnyTeamInAnotherActiveMatch(match.homeTeam(), match.awayTeam())) {
                 throw new MatchStoreException("Some of the teams are already in another ongoing match.");
             }
 
-            activeMatchesStore.compute(matchId, (key, value) -> {
+            return activeMatchesStore.compute(matchId, (key, value) -> {
                 if (nonNull(value)) {
                     throw new MatchStoreException("Match with ID '%s' already exists!".formatted(matchId));
                 }
@@ -34,6 +35,17 @@ class InMemoryMatchDataStoreHashMapImpl implements InMemoryMatchDataStore {
                 return match;
             });
         }
+    }
+
+    @Override
+    public Match update(UUID matchId, UnaryOperator<Match> updater) {
+        return activeMatchesStore.compute(matchId, (key, value) -> {
+            if (isNull(value)) {
+                throw new MatchStoreException("Match with ID '%s' does not exist!".formatted(matchId));
+            }
+
+            return updater.apply(value);
+        });
     }
 
     @Override

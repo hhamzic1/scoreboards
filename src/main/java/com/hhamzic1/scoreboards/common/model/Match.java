@@ -14,6 +14,10 @@ public record Match(UUID id, OffsetDateTime startTime, OffsetDateTime endTime,
         this(match.id(), match.startTime(), endTime, match.homeTeam(), match.awayTeam(), match.score());
     }
 
+    public Match(Match match, Score score) {
+        this(match.id, match.startTime, match.endTime, match.homeTeam, match.awayTeam, score);
+    }
+
     @Override
     public String toString() {
         return "%s %d - %s %d".formatted(homeTeam.name(), score.homeTeamScore(), awayTeam.name(), score.awayTeamScore());

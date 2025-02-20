@@ -125,7 +125,7 @@ public class LiveFootballWorldCupScoreboardTest {
         var argentina = new Team("Argentina");
         var match = scoreboard.startMatch(germany, argentina);
 
-        var updatedMatch = scoreboard.updateMatch(match.id(), new Score(3, 1));
+        var updatedMatch = scoreboard.updateScore(match.id(), new Score(3, 1));
 
         assertEquals(match.id(), updatedMatch.id());
         assertEquals(0, match.score().homeTeamScore());
@@ -136,10 +136,10 @@ public class LiveFootballWorldCupScoreboardTest {
 
     @Test
     public void givenInvalidParameters_whenUpdateScoreCalled_thenThrow() {
-        assertThrows(ScoreboardException.class, () -> scoreboard.updateMatch(null, new Score(1, 0)));
-        assertThrows(ScoreboardException.class, () -> scoreboard.updateMatch(UUID.randomUUID(), null));
-        assertThrows(ScoreboardException.class, () -> scoreboard.updateMatch(UUID.randomUUID(), new Score(-1, 1)));
-        assertThrows(ScoreboardException.class, () -> scoreboard.updateMatch(UUID.randomUUID(), new Score(2, -1)));
+        assertThrows(ScoreboardException.class, () -> scoreboard.updateScore(null, new Score(1, 0)));
+        assertThrows(ScoreboardException.class, () -> scoreboard.updateScore(UUID.randomUUID(), null));
+        assertThrows(ScoreboardException.class, () -> scoreboard.updateScore(UUID.randomUUID(), new Score(-1, 1)));
+        assertThrows(ScoreboardException.class, () -> scoreboard.updateScore(UUID.randomUUID(), new Score(2, -1)));
     }
 
     @Test
@@ -150,7 +150,7 @@ public class LiveFootballWorldCupScoreboardTest {
 
         scoreboard.finishMatch(match.id());
 
-        assertThrows(MatchStoreException.class, () -> scoreboard.updateMatch(match.id(), new Score(1, 1)));
+        assertThrows(MatchStoreException.class, () -> scoreboard.updateScore(match.id(), new Score(1, 1)));
     }
 
     private static Runnable createMatchTask(Scoreboard scoreboard, Team team1, Team team2,

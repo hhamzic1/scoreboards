@@ -26,9 +26,7 @@ class FootballScoreboardImpl implements Scoreboard {
         var initialScore = new Score(0, 0);
         var match = new Match(homeTeam, awayTeam, initialScore);
 
-        matchDataStore.save(match.id(), match);
-
-        return match;
+        return matchDataStore.save(match.id(), match);
     }
 
     @Override
@@ -36,6 +34,13 @@ class FootballScoreboardImpl implements Scoreboard {
         validator.validateOnFinishMatch(matchId);
 
         matchDataStore.delete(matchId);
+    }
+
+    @Override
+    public Match updateScore(UUID matchId, Score score) {
+        validator.validateOnScoreUpdate(matchId, score);
+
+        return matchDataStore.update(matchId, match -> new Match(match, score));
     }
 
     @Override
