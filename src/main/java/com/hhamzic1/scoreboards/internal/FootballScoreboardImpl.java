@@ -6,11 +6,17 @@ import com.hhamzic1.scoreboards.common.model.Score;
 import com.hhamzic1.scoreboards.common.model.Team;
 import com.hhamzic1.scoreboards.common.store.MatchDataStore;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
 class FootballScoreboardImpl implements Scoreboard {
 
+    private static final Comparator<StoredMatch> ACTIVE_FOOTBALL_MATCHES_SUMMARY_COMPARATOR =
+            Comparator.<StoredMatch>comparingLong(match -> match.score().homeTeamScore() + match.score().awayTeamScore())
+                    .reversed()
+                    .thenComparing(StoredMatch::startTime, Comparator.reverseOrder())
+                    .thenComparing(StoredMatch::storeOrderId, Comparator.reverseOrder());
     private final MatchDataStore matchDataStore;
     private final ScoreboardValidator validator;
 
@@ -41,6 +47,11 @@ class FootballScoreboardImpl implements Scoreboard {
         validator.validateOnScoreUpdate(matchId, score);
 
         return matchDataStore.update(matchId, match -> new Match(match, score));
+    }
+
+    @Override
+    public List<Match> getActiveMatchesSummary() {
+        return matchDataStore.getAllActive(ACTIVE_FOOTBALL_MATCHES_SUMMARY_COMPARATOR);
     }
 
     @Override

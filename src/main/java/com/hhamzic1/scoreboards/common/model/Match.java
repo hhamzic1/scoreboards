@@ -10,10 +10,6 @@ public record Match(UUID id, OffsetDateTime startTime, OffsetDateTime endTime,
         this(UUID.randomUUID(), OffsetDateTime.now(), null, homeTeam, awayTeam, score);
     }
 
-    public Match(Match match, OffsetDateTime endTime) {
-        this(match.id(), match.startTime(), endTime, match.homeTeam(), match.awayTeam(), match.score());
-    }
-
     public Match(Match match, Score score) {
         this(match.id, match.startTime, match.endTime, match.homeTeam, match.awayTeam, score);
     }

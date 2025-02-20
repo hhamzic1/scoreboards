@@ -15,5 +15,7 @@ public interface Scoreboard {
 
     Match updateScore(UUID matchId, Score score);
 
+    List<Match> getActiveMatchesSummary();
+
     List<Match> getAllFinishedMatches();
 }
