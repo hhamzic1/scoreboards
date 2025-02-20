@@ -1,6 +1,7 @@
 package com.hhamzic1.scoreboards;
 
 import com.hhamzic1.scoreboards.common.SportType;
+import com.hhamzic1.scoreboards.common.exception.MatchStoreException;
 import com.hhamzic1.scoreboards.common.exception.ScoreboardException;
 import com.hhamzic1.scoreboards.common.model.Team;
 import com.hhamzic1.scoreboards.internal.ScoreboardFactory;
@@ -53,10 +54,10 @@ public class LiveFootballWorldCupScoreboardTest {
 
         scoreboard.startMatch(spain, france);
 
-        assertThrows(MatchStoreException.class, scoreboard.startMatch(france, italy));
-        assertThrows(MatchStoreException.class, scoreboard.startMatch(italy, france));
-        assertThrows(MatchStoreException.class, scoreboard.startMatch(spain, italy));
-        assertThrows(MatchStoreException.class, scoreboard.startMatch(italy, spain));
+        assertThrows(MatchStoreException.class, () -> scoreboard.startMatch(france, italy));
+        assertThrows(MatchStoreException.class, () -> scoreboard.startMatch(italy, france));
+        assertThrows(MatchStoreException.class, () -> scoreboard.startMatch(spain, italy));
+        assertThrows(MatchStoreException.class, () -> scoreboard.startMatch(italy, spain));
     }
 
     @Test
