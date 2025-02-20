@@ -3,6 +3,7 @@ package com.hhamzic1.scoreboards;
 import com.hhamzic1.scoreboards.common.SportType;
 import com.hhamzic1.scoreboards.common.exception.MatchStoreException;
 import com.hhamzic1.scoreboards.common.exception.ScoreboardException;
+import com.hhamzic1.scoreboards.common.model.Score;
 import com.hhamzic1.scoreboards.common.model.Team;
 import com.hhamzic1.scoreboards.internal.ScoreboardFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -107,15 +108,49 @@ public class LiveFootballWorldCupScoreboardTest {
 
     @Test
     public void givenAlreadyFinishedMatch_whenFinishMatchCalled_thenThrow() {
-        var italy = new Team("Germany");
-        var england = new Team("Argentina");
-        var match = scoreboard.startMatch(italy, england);
+        var germany = new Team("Germany");
+        var argentina = new Team("Argentina");
+        var match = scoreboard.startMatch(germany, argentina);
 
         scoreboard.finishMatch(match.id());
 
         assertThrows(MatchStoreException.class, () -> scoreboard.finishMatch(match.id()));
         assertThrows(MatchStoreException.class, () -> scoreboard.finishMatch(UUID.randomUUID()));
         assertThrows(ScoreboardException.class, () -> scoreboard.finishMatch(null));
+    }
+
+    @Test
+    public void givenActiveMatch_whenUpdateScoreCalled_updateScoreSuccessfully() {
+        var germany = new Team("Germany");
+        var argentina = new Team("Argentina");
+        var match = scoreboard.startMatch(germany, argentina);
+
+        var updatedMatch = scoreboard.updateMatch(match.id(), new Score(3, 1));
+
+        assertEquals(match.id(), updatedMatch.id());
+        assertEquals(0, match.score().homeTeamScore());
+        assertEquals(0, match.score().awayTeamScore());
+        assertEquals(3, updatedMatch.score().homeTeamScore());
+        assertEquals(1, updatedMatch.score().awayTeamScore());
+    }
+
+    @Test
+    public void givenInvalidParameters_whenUpdateScoreCalled_thenThrow() {
+        assertThrows(ScoreboardException.class, () -> scoreboard.updateMatch(null, new Score(1, 0)));
+        assertThrows(ScoreboardException.class, () -> scoreboard.updateMatch(UUID.randomUUID(), null));
+        assertThrows(ScoreboardException.class, () -> scoreboard.updateMatch(UUID.randomUUID(), new Score(-1, 1)));
+        assertThrows(ScoreboardException.class, () -> scoreboard.updateMatch(UUID.randomUUID(), new Score(2, -1)));
+    }
+
+    @Test
+    public void givenAlreadyFinishedMatch_whenUpdateScoreCalled_thenThrow() {
+        var spain = new Team("Spain");
+        var honduras = new Team("Honduras");
+        var match = scoreboard.startMatch(spain, honduras);
+
+        scoreboard.finishMatch(match.id());
+
+        assertThrows(MatchStoreException.class, () -> scoreboard.updateMatch(match.id(), new Score(1, 1)));
     }
 
     private static Runnable createMatchTask(Scoreboard scoreboard, Team team1, Team team2,
