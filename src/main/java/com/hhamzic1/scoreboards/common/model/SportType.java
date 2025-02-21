@@ -1,4 +1,4 @@
-package com.hhamzic1.scoreboards.common;
+package com.hhamzic1.scoreboards.common.model;
 
 public enum SportType {
 

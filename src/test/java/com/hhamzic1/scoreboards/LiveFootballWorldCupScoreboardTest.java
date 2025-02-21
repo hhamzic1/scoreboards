@@ -1,9 +1,9 @@
 package com.hhamzic1.scoreboards;
 
-import com.hhamzic1.scoreboards.common.SportType;
 import com.hhamzic1.scoreboards.common.exception.MatchStoreException;
 import com.hhamzic1.scoreboards.common.exception.ScoreboardException;
 import com.hhamzic1.scoreboards.common.model.Score;
+import com.hhamzic1.scoreboards.common.model.SportType;
 import com.hhamzic1.scoreboards.common.model.Team;
 import com.hhamzic1.scoreboards.internal.ScoreboardFactory;
 import org.junit.jupiter.api.BeforeEach;
